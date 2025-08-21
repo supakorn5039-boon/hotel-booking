@@ -1,4 +1,5 @@
 import InputForm from '@/components/form/InputForm';
+import { ToastAlert } from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/Routes';
 import { CredentialService } from '@/services/Credential.Service';
@@ -7,7 +8,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import type { AxiosError } from 'axios';
 import { Key, UserRound } from 'lucide-react';
-import { toast } from 'react-toastify';
 
 export default function Register() {
    const navigate = useNavigate();
@@ -23,13 +23,13 @@ export default function Register() {
       mutationFn: CredentialService.Register,
       onSuccess: () => {
          queryClient.invalidateQueries({ queryKey: [CredentialService.QUERY_KEY] });
-         toast.success('สมัครสมาชิกสําเร็จ');
+         ToastAlert('success', 'สมัครสมาชิกสําเร็จ !');
          navigate({ to: ROUTES.LOGIN });
       },
 
       onError: (error: AxiosError<{ error: string }>) => {
-         const msg = error.response?.data.error ?? 'Register Fail !';
-         toast.error(msg);
+         const msg = error.response?.data.error ?? 'เกิดข้อผิดพลาด !';
+         ToastAlert('error', msg);
       },
    });
 
@@ -48,8 +48,9 @@ export default function Register() {
                   name="email"
                   icon={<UserRound className="absolute left-3 top-8 text-gray-400" size={18} />}
                   placeholder="you@example.com"
-                  register={register('email')}
+                  register={register}
                   error={errors.email}
+                  required
                />
 
                <InputForm
@@ -58,8 +59,9 @@ export default function Register() {
                   name="password"
                   icon={<Key className="absolute left-3 top-8 text-gray-400" size={18} />}
                   placeholder="••••••••"
-                  register={register('password')}
+                  register={register}
                   error={errors.password}
+                  required
                />
 
                <Button

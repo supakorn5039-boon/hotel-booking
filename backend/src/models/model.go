@@ -16,3 +16,9 @@ type User struct {
 	Email    string `gorm:"not null"`
 	Password string `gorm:"not null"`
 }
+
+type Profile struct {
+	gorm.Model
+	Email    string `gorm:"not null"`
+	Password string `gorm:"not null"`
+}

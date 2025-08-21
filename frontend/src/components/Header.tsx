@@ -69,7 +69,7 @@ export default function Header() {
                            <AvatarFallback>JD</AvatarFallback>
                         </Avatar>
                         <div className="text-left hidden sm:block">
-                           <p className="font-semibold capitalize text-gray-900">{email}</p>
+                           <p className="font-semibold text-gray-900">{email}</p>
                            <p className="text-sm text-gray-500 capitalize">{role}</p>
                         </div>
                         <ChevronDown className="ml-1 size-4 text-gray-500 transition-transform duration-200" />
@@ -77,7 +77,7 @@ export default function Header() {
                   </Button>
                </DropdownMenuTrigger>
                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuItem onClick={() => {}} className="cursor-pointer">
+                  <DropdownMenuItem onClick={() => navigate({ to: ROUTES.PROFILE })} className="cursor-pointer">
                      <UserCog2 className="mr-2 size-4" />
                      <span>Profile</span>
                   </DropdownMenuItem>

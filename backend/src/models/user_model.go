@@ -7,9 +7,9 @@ type UserDto struct {
 	Role     string `json:"role"`
 }
 
-type CreadentialDto struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+type CredentialDto struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (u *User) ToDto() UserDto {

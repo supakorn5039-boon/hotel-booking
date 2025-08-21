@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"supakorn-5039/src/server/middleware"
+
+	"github.com/gin-gonic/gin"
+)
 
 func Routes(r *gin.Engine) {
 
@@ -11,6 +15,8 @@ func Routes(r *gin.Engine) {
 			{
 				auth.POST("/login", Login)
 				auth.POST("/register", Register)
+				auth.GET("/profile", middleware.Protected(), GetProfile)
+				auth.PUT("/profile", middleware.Protected(), UpdateProfile)
 			}
 		}
 	}
