@@ -1,20 +1,29 @@
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const ToastifyContainer = () => (
-   <ToastContainer
-      position="top-center"
-      autoClose={5000}
-      hideProgressBar
-      newestOnTop
-      closeOnClick={false}
-      rtl={false}
-      pauseOnFocusLoss
-      draggable={false}
-      pauseOnHover
-      theme="light"
-      className="!p-0"
-      toastClassName={() => 'relative flex p-0 min-h-0 rounded-md overflow-hidden bg-transparent shadow-md w-auto'}
-      style={{ width: '600px', minWidth: '600px' }}
-   />
-);
+const autoClose = 4000;
+
+export const ToastProvider = () => {
+   return <ToastContainer position="top-right" autoClose={autoClose} newestOnTop closeOnClick theme="colored" />;
+};
+
+export type IToastAlertStatus = 'success' | 'error' | 'info' | 'default';
+
+export function ToastAlert(status: IToastAlertStatus, message: string) {
+   switch (status) {
+      case 'success':
+         toast.success(message);
+         break;
+      case 'error':
+         toast.error(message);
+         break;
+      case 'info':
+         toast.info(message);
+         break;
+      case 'default':
+         toast(message);
+         break;
+      default:
+         toast(message);
+   }
+}

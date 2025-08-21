@@ -89,3 +89,35 @@ func (s *AuthenticateService) GetProfile(token string) (*models.UserDto, error) 
 
 	return &dto, nil
 }
+
+func (s *AuthenticateService) UpdateProfile(token string, updatedData *models.ProfileDto) (*models.ProfileDto, error) {
+	userId, err := security.ParseJWT(token)
+
+	if err != nil {
+		return nil, fmt.Errorf("invalid token: %v", err)
+	}
+
+	var user models.User
+	if err := database.Db.First(&user, userId).Error; err != nil {
+		return nil, fmt.Errorf("user not found: %v", err)
+	}
+
+	if updatedData.Email != "" {
+		user.Email = updatedData.Email
+	}
+
+	if updatedData.Password != "" {
+		hashedPassword, err := security.HashPassword(updatedData.Password)
+		if err != nil {
+			return nil, fmt.Errorf("failed to hash password: %v", err)
+		}
+		user.Password = hashedPassword
+	}
+
+	if err := database.Db.Save(&user).Error; err != nil {
+		return nil, fmt.Errorf("failed to update user profile: %v", err)
+	}
+
+	dto := models.ProfileDto{}
+	return &dto, nil
+}

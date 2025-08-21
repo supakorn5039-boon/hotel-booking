@@ -1,4 +1,5 @@
 import InputForm from '@/components/form/InputForm';
+import { ToastAlert } from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/Routes';
 import { CredentialService } from '@/services/Credential.Service';
@@ -8,7 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import type { AxiosError } from 'axios';
 import { Key, UserRound } from 'lucide-react';
-import { toast } from 'react-toastify';
+import type { SubmitHandler } from 'react-hook-form';
 
 export default function Login() {
    const navigate = useNavigate();
@@ -31,18 +32,22 @@ export default function Login() {
          });
 
          queryClient.invalidateQueries({ queryKey: [CredentialService.QUERY_KEY] });
-         toast.success('เข้าสู่ระบบสําเร็จ');
+         ToastAlert('success', 'เข้าสู่ระบบสําเร็จ');
          navigate({ to: ROUTES.HOME });
       },
 
       onError: (error: AxiosError<{ error: string }>) => {
          const msg = error.response?.data.error ?? 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
-         toast.error(msg);
+         ToastAlert('error', msg);
       },
    });
 
-   const onSubmit = async (data: CredentialResponseProps) => {
-      mutation.mutate(data);
+   const onSubmit: SubmitHandler<CredentialResponseProps> = (data: CredentialResponseProps) => {
+      try {
+         mutation.mutateAsync(data);
+      } catch (error) {
+         console.error('Login error:', error);
+      }
    };
 
    return (
@@ -50,24 +55,26 @@ export default function Login() {
          <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl">
             <h2 className="text-3xl font-extrabold text-center text-gray-900">Welcome Back!</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-               <InputForm
+               <InputForm<CredentialResponseProps>
                   type="email"
                   label="Email"
                   name="email"
                   icon={<UserRound className="absolute left-3 top-8 text-gray-400" size={18} />}
                   placeholder="you@example.com"
-                  register={register('email')}
+                  register={register}
                   error={errors.email}
+                  required
                />
 
-               <InputForm
+               <InputForm<CredentialResponseProps>
                   type="password"
                   label="Password"
                   name="password"
                   icon={<Key className="absolute left-3 top-8 text-gray-400" size={18} />}
                   placeholder="••••••••"
-                  register={register('password')}
+                  register={register}
                   error={errors.password}
+                  required
                />
 
                <Button

@@ -3,15 +3,13 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 
-// Import the generated route tree
 import { routeTree } from './routeTree.gen';
 
-import { ToastContainer } from 'react-toastify';
-import { SpinnerLoadingPulse } from './components/ui/spinLoading';
+import { SpinnerLoadingPulse } from '@/components/ui/spinLoading';
+import { ToastProvider } from './components/Toast';
 import reportWebVitals from './reportWebVitals';
 import './styles.css';
 
-// Create a new router instance
 const router = createRouter({
    routeTree,
    context: {},
@@ -21,14 +19,12 @@ const router = createRouter({
    defaultPreloadStaleTime: 0,
 });
 
-// Register the router instance for type safety
 declare module '@tanstack/react-router' {
    interface Register {
       router: typeof router;
    }
 }
 
-// Render the app
 const rootElement = document.getElementById('app');
 const queryClient = new QueryClient();
 
@@ -39,7 +35,7 @@ if (rootElement && !rootElement.innerHTML) {
          <Suspense fallback={<SpinnerLoadingPulse />}>
             <QueryClientProvider client={queryClient}>
                <RouterProvider router={router} />
-               <ToastContainer />
+               <ToastProvider />
             </QueryClientProvider>
          </Suspense>
       </StrictMode>

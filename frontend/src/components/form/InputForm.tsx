@@ -1,19 +1,22 @@
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import type React from 'react';
-import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import type { FieldError, FieldValues, Path, UseFormRegister, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
 
-type InputFormProps = React.HTMLAttributes<HTMLDivElement> & {
-   type: 'email' | 'password' | 'text' | 'number';
+type InputFormProps<T extends FieldValues> = React.HTMLAttributes<HTMLDivElement> & {
+   type: React.HTMLInputTypeAttribute;
    error?: FieldError;
-   register: UseFormRegisterReturn;
+   register: UseFormRegister<T>;
    icon?: React.ReactNode;
    label?: string;
-   name?: string;
+   name: Path<T>;
    placeholder?: string;
+   setValue?: UseFormSetValue<T>;
+   trigger?: UseFormTrigger<T>;
+   required?: boolean;
 };
 
-export default function InputForm({
+export default function InputForm<T extends FieldValues>({
    className,
    error,
    register,
@@ -22,14 +25,37 @@ export default function InputForm({
    name,
    label,
    placeholder,
+   setValue,
+   trigger,
+   required,
    ...rest
-}: InputFormProps): React.ReactElement {
+}: InputFormProps<T>): React.ReactElement {
    return (
       <div className={`relative ${className}`}>
-         <Label htmlFor={name} className="text-gray-700 font-medium">
-            {label}
-         </Label>
-         <Input id={name} type={type} placeholder={placeholder} {...register} {...rest} className="mt-1 pl-10" />
+         {label && (
+            <Label htmlFor={name} className="text-gray-700 font-medium">
+               {label}
+               {required && (
+                  <span className="text-red-500" aria-hidden="true">
+                     *
+                  </span>
+               )}
+            </Label>
+         )}
+         <Input
+            id={name}
+            type={type}
+            placeholder={placeholder}
+            {...register(name)}
+            {...rest}
+            className={`mt-1 pl-10 transition-colors duration-200`}
+            aria-required={required}
+            aria-invalid={!!error}
+            onChange={e => {
+               setValue?.(name, e.target.value as T[Path<T>]);
+               trigger?.(name);
+            }}
+         />
          {icon}
          {error && <p className="text-sm text-red-500 mt-1">{error.message}</p>}
       </div>
