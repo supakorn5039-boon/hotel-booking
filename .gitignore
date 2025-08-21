@@ -1,0 +1,45 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node.js / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.*   # Ignore environment files for all environments (e.g., .env.dev)
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Go / Backend
+backend/tmp/
+*.exe
+*.out
+*.test
+*.log
+*/docker
+
+# Ignore checksum files except Go's go.sum
+!go.sum
+
+
+# Optional: OS or swap files
+*.swp
+*.bak
+*.tmp
+*~

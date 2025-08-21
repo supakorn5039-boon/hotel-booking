@@ -1,0 +1,93 @@
+name: CI
+
+on:
+   push:
+      branches: [main, dev]
+   pull_request:
+      branches: [main, dev]
+
+jobs:
+   backend:
+      name: Backend - Go CI
+      runs-on: ubuntu-latest
+
+      services:
+         postgres:
+            image: postgres:17
+            env:
+               POSTGRES_USER: username
+               POSTGRES_PASSWORD: password
+               POSTGRES_DB: hotel
+            ports:
+               - 5433:5432
+            options: >-
+               --health-cmd pg_isready
+               --health-interval 10s
+               --health-timeout 5s
+               --health-retries 5
+
+      env:
+         DB_DSN: host=localhost user=username password=password dbname=hotel port=5432 sslmode=disable
+
+      defaults:
+         run:
+            working-directory: backend
+
+      steps:
+         - uses: actions/checkout@v3
+
+         - name: Set up Go
+           uses: actions/setup-go@v4
+           with:
+              go-version: 1.22.x
+              cache-dependency-path: backend/go.sum
+
+         - name: Cache Go modules
+           uses: actions/cache@v3
+           with:
+              path: |
+                 ~/.cache/go-build
+                 ~/go/pkg/mod
+              key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}
+              restore-keys: |
+                 ${{ runner.os }}-go-
+
+         - name: Tidy Go modules
+           run: go mod tidy
+
+         - name: Ensure go.sum exists
+           run: ls -l go.sum
+           working-directory: backend
+
+         - name: Backend Test
+           run: go test ./...
+
+   frontend:
+      name: Frontend - React CI
+      runs-on: ubuntu-latest
+
+      defaults:
+         run:
+            working-directory: frontend
+
+      steps:
+         - uses: actions/checkout@v3
+
+         - name: Set up Node.js
+           uses: actions/setup-node@v3
+           with:
+              node-version: 22
+
+         - name: Cache Node modules
+           uses: actions/cache@v3
+           with:
+              path: ~/.npm
+              key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+              restore-keys: |
+                 ${{ runner.os }}-node-
+
+         - name: Frontend Install
+           run: npm install
+
+         - name: Frontend Build
+           run: npm run build
