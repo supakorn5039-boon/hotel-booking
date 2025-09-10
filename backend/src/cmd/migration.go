@@ -7,6 +7,7 @@ import (
 	"supakorn-5039/src/config"
 	"supakorn-5039/src/models"
 	"supakorn-5039/src/security"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -42,14 +43,14 @@ func main() {
 	}
 
 	err = db.Migrator().DropTable(
-		&models.User{},
+		&models.User{}, &models.Hotel{}, &models.Booking{},
 	)
 	if err != nil {
 		log.Fatalf("failed to drop tables: %v", err)
 	}
 
 	if err = db.AutoMigrate(
-		&models.User{},
+		&models.User{}, &models.Hotel{}, &models.Booking{},
 	); err != nil {
 		log.Fatalf("failed to migrate tables: %v", err)
 	}
@@ -69,6 +70,42 @@ func main() {
 
 	if err = db.Create(&mockUpUser).Error; err != nil {
 		log.Fatalf("failed to create mock up user: %v", err)
+	}
+
+	mockUpHotel := []models.Hotel{{
+		Name:        "Hotel 1",
+		Description: "Test Hotel",
+		Rating:      5,
+		Price:       600,
+		Image:       "https://upload.opalcollection.com/app/uploads/sites/9/2022/07/22154724/HEADER_Stay-at-Jupiter-Beach-Resort.jpg",
+		People:      2,
+	}, {
+		Name:        "Hotel 2",
+		Description: "Test Hotel",
+		Rating:      4,
+		Price:       1000,
+		Image:       "https://content.r9cdn.net/rimg/himg/2e/7b/a5/expedia_group-94818-faad0b-358361.jpg?width=1366&height=768&crop=true",
+		People:      4,
+	}}
+
+	if err = db.Create(&mockUpHotel).Error; err != nil {
+		log.Fatalf("failed to create mock up hotel: %v", err)
+	}
+
+	mockUpBooking := []models.Booking{{
+		HotelId:   1,
+		UserId:    1,
+		StartDate: time.Now(),
+		EndDate:   time.Now().AddDate(0, 0, 5),
+	}, {
+		HotelId:   2,
+		UserId:    1,
+		StartDate: time.Now(),
+		EndDate:   time.Now().AddDate(0, 0, 5),
+	}}
+
+	if err := db.Create(&mockUpBooking).Error; err != nil {
+		log.Fatalf("failed to create mock up booking: %v", err)
 	}
 
 	log.Println("Seeding complete!")
