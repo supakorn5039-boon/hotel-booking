@@ -8,12 +8,23 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 
+const MyBookingLazyRouteImport = createFileRoute('/my-booking')()
+const HotelIndexLazyRouteImport = createFileRoute('/hotel/')()
+const HotelIdLazyRouteImport = createFileRoute('/hotel/$id')()
+
+const MyBookingLazyRoute = MyBookingLazyRouteImport.update({
+  id: '/my-booking',
+  path: '/my-booking',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/my-booking.lazy').then((d) => d.Route))
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -34,18 +45,34 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HotelIndexLazyRoute = HotelIndexLazyRouteImport.update({
+  id: '/hotel/',
+  path: '/hotel/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/hotel/index.lazy').then((d) => d.Route))
+const HotelIdLazyRoute = HotelIdLazyRouteImport.update({
+  id: '/hotel/$id',
+  path: '/hotel/$id',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/hotel/$id.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/my-booking': typeof MyBookingLazyRoute
+  '/hotel/$id': typeof HotelIdLazyRoute
+  '/hotel': typeof HotelIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/my-booking': typeof MyBookingLazyRoute
+  '/hotel/$id': typeof HotelIdLazyRoute
+  '/hotel': typeof HotelIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +80,38 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/my-booking': typeof MyBookingLazyRoute
+  '/hotel/$id': typeof HotelIdLazyRoute
+  '/hotel/': typeof HotelIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/profile' | '/register'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/my-booking'
+    | '/hotel/$id'
+    | '/hotel'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/profile' | '/register'
-  id: '__root__' | '/' | '/login' | '/profile' | '/register'
+  to:
+    | '/'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/my-booking'
+    | '/hotel/$id'
+    | '/hotel'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/my-booking'
+    | '/hotel/$id'
+    | '/hotel/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +119,20 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
+  MyBookingLazyRoute: typeof MyBookingLazyRoute
+  HotelIdLazyRoute: typeof HotelIdLazyRoute
+  HotelIndexLazyRoute: typeof HotelIndexLazyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/my-booking': {
+      id: '/my-booking'
+      path: '/my-booking'
+      fullPath: '/my-booking'
+      preLoaderRoute: typeof MyBookingLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -99,6 +161,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hotel/': {
+      id: '/hotel/'
+      path: '/hotel'
+      fullPath: '/hotel'
+      preLoaderRoute: typeof HotelIndexLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hotel/$id': {
+      id: '/hotel/$id'
+      path: '/hotel/$id'
+      fullPath: '/hotel/$id'
+      preLoaderRoute: typeof HotelIdLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +183,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
+  MyBookingLazyRoute: MyBookingLazyRoute,
+  HotelIdLazyRoute: HotelIdLazyRoute,
+  HotelIndexLazyRoute: HotelIndexLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

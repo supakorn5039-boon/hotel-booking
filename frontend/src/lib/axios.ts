@@ -18,7 +18,7 @@ fetchClient.interceptors.request.use(
       }
       return config;
    },
-   error => Promise.reject(error)
+   error => Promise.reject(new Error(error.message))
 );
 
 fetchClient.interceptors.response.use(
@@ -28,6 +28,6 @@ fetchClient.interceptors.response.use(
          localStorage.clear();
          window.location.href = ROUTES.LOGIN;
       }
-      return Promise.reject(error);
+      return Promise.reject(new Error(error.message));
    }
 );

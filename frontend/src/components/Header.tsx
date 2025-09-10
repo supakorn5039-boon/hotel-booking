@@ -9,13 +9,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { NavItems, ROUTES } from '@/constants/Routes';
 import { useUserStore } from '@/store/useUserStore';
-import { Link, useNavigate } from '@tanstack/react-router';
-import { ChevronDown, LogOut, UserCog2 } from 'lucide-react';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+import { ChevronDown, LogOut, TicketCheck, UserCog2 } from 'lucide-react';
 
 export default function Header() {
    const { email, role } = useUserStore();
-   const location = { pathname: '/' };
    const navigate = useNavigate();
+   const location = useLocation();
+
+   const token = localStorage.getItem('token');
 
    const handleLogout = () => {
       navigate({ to: ROUTES.LOGIN });
@@ -23,7 +25,8 @@ export default function Header() {
       window.location.reload();
    };
 
-   if (!email) {
+   if (!token) {
+      console.log('Not logged in');
       return null;
    }
 
@@ -77,6 +80,11 @@ export default function Header() {
                   </Button>
                </DropdownMenuTrigger>
                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuItem onClick={() => navigate({ to: ROUTES.MY_BOOKING })} className="cursor-pointer">
+                     <TicketCheck className="mr-2 size-4" />
+                     <span>My Booking</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate({ to: ROUTES.PROFILE })} className="cursor-pointer">
                      <UserCog2 className="mr-2 size-4" />
                      <span>Profile</span>
