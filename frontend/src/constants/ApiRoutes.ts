@@ -1,5 +1,7 @@
 export const ApiRoutes = {
-   LOGIN: '/api/auth/login',
-   REGISTER: '/api/auth/register',
-   PROFILE: '/api/auth/profile',
+   LOGIN: '/api/v1/auth/login',
+   REGISTER: '/api/v1/auth/register',
+   PROFILE: '/api/v1/auth/profile',
+   HOTEL: '/api/v1/hotel',
+   BOOKING: '/api/v1/booking',
 };

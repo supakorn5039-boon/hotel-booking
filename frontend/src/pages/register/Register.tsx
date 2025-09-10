@@ -16,6 +16,7 @@ export default function Register() {
    const {
       register,
       handleSubmit,
+      setError,
       formState: { errors, isSubmitting },
    } = CredentialService.useCredentialForm();
 
@@ -27,9 +28,12 @@ export default function Register() {
          navigate({ to: ROUTES.LOGIN });
       },
 
-      onError: (error: AxiosError<{ error: string }>) => {
-         const msg = error.response?.data.error ?? 'เกิดข้อผิดพลาด !';
+      onError: (error: AxiosError) => {
+         const data = error.response?.data as any;
+         const msg = data?.error ?? data?.message ?? 'Email นี้ถูกใช้ไปแล้ว !';
+
          ToastAlert('error', msg);
+         setError('email', { type: 'manual', message: msg });
       },
    });
 

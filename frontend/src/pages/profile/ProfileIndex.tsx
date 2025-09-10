@@ -3,7 +3,7 @@ import { ToastAlert } from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SpinnerLoadingPulse } from '@/components/ui/spinLoading';
-import type { ProfileFormProps } from '@/dto/ProfileDto';
+import type { CredentialFormProps } from '@/dto/CredentialDto';
 import { ProfileService } from '@/services/Profile.Service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Key, UserRound } from 'lucide-react';
@@ -30,7 +30,7 @@ export default function ProfileIndex() {
       },
    });
 
-   const onSubmit = (data: ProfileFormProps) => mutation.mutateAsync(data);
+   const onSubmit = (data: CredentialFormProps) => mutation.mutateAsync(data);
 
    if (isLoading || !profileData) {
       return <SpinnerLoadingPulse />;
@@ -44,7 +44,7 @@ export default function ProfileIndex() {
             </CardHeader>
             <CardContent>
                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  <InputForm<ProfileFormProps>
+                  <InputForm<CredentialFormProps>
                      type="email"
                      label="Email"
                      name="email"
@@ -54,7 +54,7 @@ export default function ProfileIndex() {
                      error={errors.email}
                      required
                   />
-                  <InputForm<ProfileFormProps>
+                  <InputForm<CredentialFormProps>
                      type="password"
                      label="Password"
                      name="password"
