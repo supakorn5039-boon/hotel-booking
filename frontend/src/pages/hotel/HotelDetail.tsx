@@ -1,5 +1,5 @@
+import AlertModal from '@/components/modal/AlertModal';
 import { ToastAlert } from '@/components/Toast';
-import AlertDialogDemo from '@/components/ui/AlertDialog';
 import { BookingService } from '@/services/Booking.Service';
 import { HotelService } from '@/services/Hotel.Service';
 import type { BookingProps } from '@/types/Booking';
@@ -75,7 +75,7 @@ export default function HotelDetail() {
                      <span className="text-2xl font-bold text-blue-600">${hotel.price}</span>
                      <span className="text-gray-500 ml-1">/ night</span>
                   </div>
-                  <AlertDialogDemo
+                  <AlertModal
                      confirmAction={onSubmit}
                      buttonLabel="Book Now"
                      title="Are you sure you want to book this hotel?"
