@@ -62,9 +62,7 @@ export default function HotelIndex() {
                      </CardContent>
                      <CardFooter>
                         <Link to="/hotel/$id" className="w-full" params={{ id: String(hotel.id) }}>
-                           <Button onClick={() => console.log(hotel)} className="w-full">
-                              Book Now
-                           </Button>
+                           <Button className="w-full">Book Now</Button>
                         </Link>
                      </CardFooter>
                   </Card>

@@ -27,13 +27,9 @@ export default function MyBookingIndex(): React.ReactElement {
       return <div className="text-red-500 text-center py-4">Failed to load bookings. Please try again later.</div>;
    }
 
-   if (!bookings || bookings.length === 0) {
-      return <div className="text-center py-4 text-gray-500">You have no bookings yet.</div>;
-   }
-
    return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 pt-32 max-w-7xl mx-auto">
-         {bookings.map((booking: BookingProps) => (
+         {bookings?.map((booking: BookingProps) => (
             <Card key={booking.id} className="shadow-md rounded-2xl">
                <CardContent className="pt-6 space-y-2">
                   <img src={booking.hotel.image} alt={booking.hotel.name} className="w-full h-40 object-cover rounded-xl mb-3" />
