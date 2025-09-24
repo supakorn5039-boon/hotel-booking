@@ -10,7 +10,6 @@ import {
    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 
 type AlertDialogProps = {
    buttonLabel?: string;
@@ -19,18 +18,20 @@ type AlertDialogProps = {
    cancel?: string;
    confirm?: string;
    confirmAction?: () => void;
+   open?: boolean;
+   setOpen?: (open: boolean) => void;
 };
 
-export default function AlertDialogDemo({
+export default function AlertModal({
    buttonLabel = 'Book Now',
    title,
    description,
    cancel,
    confirm,
    confirmAction,
+   open,
+   setOpen,
 }: Readonly<AlertDialogProps>) {
-   const [open, setOpen] = useState<boolean>(false);
-
    return (
       <AlertDialog open={open} onOpenChange={setOpen}>
          <AlertDialogTrigger asChild>
@@ -49,7 +50,6 @@ export default function AlertDialogDemo({
                   className="cursor-pointer"
                   onClick={() => {
                      confirmAction?.();
-                     setOpen(false);
                   }}
                >
                   {confirm}

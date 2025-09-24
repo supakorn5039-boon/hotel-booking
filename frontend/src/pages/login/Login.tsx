@@ -43,11 +43,7 @@ export default function Login() {
    });
 
    const onSubmit: SubmitHandler<CredentialResponseProps> = (data: CredentialResponseProps) => {
-      try {
-         mutation.mutateAsync(data);
-      } catch (error) {
-         console.error('Login error:', error);
-      }
+      mutation.mutateAsync(data);
    };
 
    return (

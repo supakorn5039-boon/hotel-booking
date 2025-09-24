@@ -46,13 +46,14 @@ export default function InputForm<T extends FieldValues>({
             id={name}
             type={type}
             placeholder={placeholder}
-            {...register(name)}
+            {...register(name, type === 'number' ? { valueAsNumber: true } : {})}
             {...rest}
-            className={`mt-1 pl-10 transition-colors duration-200`}
+            className={`mt-1 transition-colors duration-200 ${icon ? 'pl-10' : ''}`}
             aria-required={required}
             aria-invalid={!!error}
             onChange={e => {
-               setValue?.(name, e.target.value as T[Path<T>]);
+               const value = type === 'number' ? Number(e.target.value) : e.target.value;
+               setValue?.(name, value as T[Path<T>]);
                trigger?.(name);
             }}
          />

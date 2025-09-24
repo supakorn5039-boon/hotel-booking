@@ -40,3 +40,38 @@ func (s *HotelService) GetHotel(id uint) (*models.HotelDto, error) {
 	dt := hotel.ToHotelDto()
 	return &dt, nil
 }
+
+func (s *HotelService) CreateHotel(hotel *models.Hotel) (*models.HotelDto, error) {
+
+	if err := s.db.Create(hotel).Error; err != nil {
+		return nil, err
+	}
+
+	dto := hotel.ToHotelDto()
+
+	return &dto, nil
+
+}
+
+func (s *HotelService) UpdateHotel(id uint, hotel *models.Hotel) (*models.HotelDto, error) {
+	var exist models.Hotel
+
+	if err := s.db.First(&exist, id).Error; err != nil {
+		return nil, err
+	}
+
+	if err := s.db.Model(&exist).Updates(hotel).Error; err != nil {
+		return nil, err
+	}
+
+	dto := exist.ToHotelDto()
+	return &dto, nil
+}
+
+func (s *HotelService) DeleteHotel(id uint) error {
+	if err := s.db.Delete(&models.Hotel{}, id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
