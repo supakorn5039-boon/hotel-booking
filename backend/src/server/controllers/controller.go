@@ -35,6 +35,7 @@ func Routes(r *gin.Engine) {
 			bs := &BookingController{service: services.NewBookingService()}
 			{
 				booking.GET("", bs.GetBookingByUserId)
+				booking.POST("", bs.CreateBooking)
 			}
 		}
 	}
