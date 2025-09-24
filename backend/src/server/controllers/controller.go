@@ -27,7 +27,9 @@ func Routes(r *gin.Engine) {
 			{
 				hotel.GET("", hc.GetHotels)
 				hotel.GET("/:id", hc.GetHotelById)
-
+				hotel.POST("", hc.CreateHotel)
+				hotel.PUT("/:id", hc.UpdateHotel)
+				hotel.DELETE("/:id", hc.DeleteHotel)
 			}
 
 			booking := v1.Group("/booking")
