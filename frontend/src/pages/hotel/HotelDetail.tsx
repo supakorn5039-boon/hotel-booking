@@ -1,17 +1,20 @@
 import AlertModal from '@/components/modal/AlertModal';
 import { ToastAlert } from '@/components/Toast';
+import { SpinnerLoadingPulse } from '@/components/ui/spinLoading';
+import { ROUTES } from '@/constants/Routes';
 import { BookingService } from '@/services/Booking.Service';
 import { HotelService } from '@/services/Hotel.Service';
 import type { BookingProps } from '@/types/Booking';
 import type { HotelProps } from '@/types/Hotel';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 
 export default function HotelDetail() {
    const { id } = useParams({ strict: false });
    const queryClient = useQueryClient();
 
    const form = BookingService.useBookingForm();
+   const navigate = useNavigate();
 
    const {
       data: hotel,
@@ -24,30 +27,27 @@ export default function HotelDetail() {
    });
 
    const createBooking = useMutation({
-      mutationFn: (data: any) => {
+      mutationFn: (data: BookingProps) => {
          return BookingService.createBooking(data);
       },
       onSuccess: () => {
          ToastAlert('success', 'Booking created successfully');
          form.reset();
          queryClient.invalidateQueries({ queryKey: [BookingService.QUERY_KEY] });
+         navigate({ to: ROUTES.MY_BOOKING });
       },
    });
 
    const onSubmit = form.handleSubmit((data: BookingProps) => {
       createBooking.mutate({
          ...data,
-         hotel: hotel,
+         hotel: hotel!,
          hotel_id: hotel?.id ?? 0,
       });
    });
 
    if (isLoading) {
-      return (
-         <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-         </div>
-      );
+      return <SpinnerLoadingPulse />;
    }
 
    if (error) return <div className="text-center text-red-500">⚠️ Error loading hotel</div>;

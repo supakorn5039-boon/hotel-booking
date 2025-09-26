@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { SpinnerLoadingPulse } from '@/components/ui/spinLoading';
 import { ROUTES } from '@/constants/Routes';
 import { HotelDefaultValues } from '@/dto/HotelDto';
+import { CustomerReviewsService } from '@/services/CustomerReviews.Service';
 import { HotelService } from '@/services/Hotel.Service';
 import { useUserStore } from '@/store/useUserStore';
 import type { HotelProps } from '@/types/Hotel';
@@ -34,6 +35,11 @@ export default function Home() {
    const { data = [], isLoading } = useQuery({
       queryKey: [HotelService.QUERY_KEY],
       queryFn: () => HotelService.getHotels(),
+   });
+
+   const { data: customerReviewsData, isLoading: customerLoading } = useQuery({
+      queryKey: [CustomerReviewsService.QUERY_KEY],
+      queryFn: () => CustomerReviewsService.getReviews(),
    });
 
    const saveHotel = useMutation({
@@ -75,7 +81,7 @@ export default function Home() {
       saveHotel.mutate(values);
    };
 
-   if (isLoading) return <SpinnerLoadingPulse />;
+   if (isLoading || customerLoading) return <SpinnerLoadingPulse />;
 
    return (
       <div className="bg-gray-50 min-h-screen">
@@ -170,14 +176,10 @@ export default function Home() {
             <div className="max-w-7xl mx-auto text-center">
                <h2 className="text-3xl font-bold mb-8">What our customers say</h2>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {[
-                     { name: 'Emily', text: 'Amazing experience! Booking was easy and the hotel exceeded my expectations.' },
-                     { name: 'David', text: 'The best way to find hotels. The search was fast and prices were unbeatable.' },
-                     { name: 'Sophia', text: 'I loved the customer support chat. Super friendly and helpful!' },
-                  ].map(t => (
+                  {customerReviewsData?.map(t => (
                      <Card key={t.name} className="p-6 shadow-sm">
-                        <p className="italic text-gray-600">“{t.text}”</p>
-                        <p className="mt-4 font-semibold text-gray-900">— {t.name}</p>
+                        <p className="italic text-gray-600">"{t.text}"</p>
+                        <p className="mt-4 font-semibold text-gray-900">{t.name}</p>
                      </Card>
                   ))}
                </div>
@@ -198,7 +200,6 @@ export default function Home() {
          </FormProvider>
          <AlertModal
             confirmAction={() => selectedHotel && deleteHotel.mutate(selectedHotel.id)}
-            buttonLabel="Delete"
             title="Are you sure you want to delete this hotel?"
             description="This action cannot be undone."
             cancel="Cancel"
