@@ -23,7 +23,7 @@ type AlertDialogProps = {
 };
 
 export default function AlertModal({
-   buttonLabel = 'Book Now',
+   buttonLabel = '',
    title,
    description,
    cancel,
@@ -35,9 +35,11 @@ export default function AlertModal({
    return (
       <AlertDialog open={open} onOpenChange={setOpen}>
          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="cursor-pointer">
-               {buttonLabel}
-            </Button>
+            {buttonLabel && (
+               <Button variant="outline" className="cursor-pointer">
+                  {buttonLabel}
+               </Button>
+            )}
          </AlertDialogTrigger>
          <AlertDialogContent>
             <AlertDialogHeader>
