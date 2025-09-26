@@ -39,6 +39,13 @@ func Routes(r *gin.Engine) {
 				booking.GET("", bs.GetBookingByUserId)
 				booking.POST("", bs.CreateBooking)
 			}
+
+			customer := v1.Group("/customer-reviews")
+			customer.Use(middleware.Protected())
+			cc := &CustomerController{service: services.NewCustomerService()}
+			{
+				customer.GET("", cc.GetCustomerReviews)
+			}
 		}
 	}
 

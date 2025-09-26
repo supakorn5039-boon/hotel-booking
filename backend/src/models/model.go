@@ -43,3 +43,9 @@ type Booking struct {
 	EndDate   time.Time `gorm:"not null"`
 	Hotel     Hotel     `gorm:"foreignKey:HotelId;references:ID"`
 }
+
+type Customer struct {
+	gorm.Model
+	Name string `gorm:"not null"`
+	Text string `gorm:"not null"`
+}

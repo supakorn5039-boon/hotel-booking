@@ -43,14 +43,14 @@ func main() {
 	}
 
 	err = db.Migrator().DropTable(
-		&models.User{}, &models.Hotel{}, &models.Booking{},
+		&models.User{}, &models.Hotel{}, &models.Booking{}, &models.Customer{},
 	)
 	if err != nil {
 		log.Fatalf("failed to drop tables: %v", err)
 	}
 
 	if err = db.AutoMigrate(
-		&models.User{}, &models.Hotel{}, &models.Booking{},
+		&models.User{}, &models.Hotel{}, &models.Booking{}, &models.Customer{},
 	); err != nil {
 		log.Fatalf("failed to migrate tables: %v", err)
 	}
@@ -106,6 +106,21 @@ func main() {
 
 	if err := db.Create(&mockUpBooking).Error; err != nil {
 		log.Fatalf("failed to create mock up booking: %v", err)
+	}
+
+	mockUpReviews := []models.Customer{{
+		Name: "Supakorn",
+		Text: "Test Review 1",
+	}, {
+		Name: "Test User",
+		Text: "Test Review 2",
+	}, {
+		Name: "Kittipong",
+		Text: "Test Review 3",
+	}}
+
+	if err := db.Create(&mockUpReviews).Error; err != nil {
+		log.Fatalf("failed to create mock up review: %v", err)
 	}
 
 	log.Println("Seeding complete!")
