@@ -1,5 +1,5 @@
 export type CustomerReviewsProps = {
-   id: number;
+   id?: number;
    name: string;
    text: string;
 };
