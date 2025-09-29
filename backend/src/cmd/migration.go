@@ -114,9 +114,6 @@ func main() {
 	}, {
 		Name: "Test User",
 		Text: "Test Review 2",
-	}, {
-		Name: "Kittipong",
-		Text: "Test Review 3",
 	}}
 
 	if err := db.Create(&mockUpReviews).Error; err != nil {
