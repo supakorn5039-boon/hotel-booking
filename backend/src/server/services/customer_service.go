@@ -31,3 +31,14 @@ func (s *CustomerService) GetCustomerReviews() ([]*models.CustomerDto, error) {
 
 	return r, nil
 }
+
+func (s *CustomerService) CreateCustomerReviews(review *models.Customer) (*models.CustomerDto, error) {
+
+	if err := s.db.Create(review).Error; err != nil {
+		return nil, err
+	}
+
+	dto := review.ToCustomerDto()
+	return &dto, nil
+
+}

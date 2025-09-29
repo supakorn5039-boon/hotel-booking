@@ -1,6 +1,7 @@
 import HotelForm from '@/components/form/HotelForm';
 import AlertModal from '@/components/modal/AlertModal';
 import DialogModal from '@/components/modal/DIalogModal';
+import { ToastAlert } from '@/components/Toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -57,7 +58,10 @@ export default function Home() {
 
    const deleteHotel = useMutation({
       mutationFn: (id: number) => HotelService.deleteHotel(id),
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: [HotelService.QUERY_KEY] }),
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: [HotelService.QUERY_KEY] });
+         ToastAlert('success', 'Hotel deleted successfully');
+      },
    });
 
    const handleEdit = (hotel: HotelProps) => {
@@ -171,22 +175,23 @@ export default function Home() {
             </div>
          </section>
 
-         {/* Customer Reviews */}
          <section className="bg-white py-16 border-t border-gray-200">
             <div className="max-w-7xl mx-auto text-center">
                <h2 className="text-3xl font-bold mb-8">What our customers say</h2>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {customerReviewsData?.map(t => (
-                     <Card key={t.name} className="p-6 shadow-sm">
-                        <p className="italic text-gray-600">"{t.text}"</p>
-                        <p className="mt-4 font-semibold text-gray-900">{t.name}</p>
-                     </Card>
-                  ))}
+                  {customerReviewsData
+                     ?.slice(0, 3)
+                     .sort(() => 0.5 - Math.random())
+                     .map(t => (
+                        <Card key={t.name} className="p-6 shadow-sm">
+                           <p className="italic text-gray-600">"{t.text}"</p>
+                           <p className="mt-4 font-semibold text-gray-900">{t.name}</p>
+                        </Card>
+                     ))}
                </div>
             </div>
          </section>
 
-         {/* Modal Form */}
          <FormProvider {...form}>
             <DialogModal
                title={editingHotel ? 'Edit Hotel' : 'Add a New Hotel'}

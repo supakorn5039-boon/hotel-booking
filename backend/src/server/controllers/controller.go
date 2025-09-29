@@ -45,6 +45,7 @@ func Routes(r *gin.Engine) {
 			cc := &CustomerController{service: services.NewCustomerService()}
 			{
 				customer.GET("", cc.GetCustomerReviews)
+				customer.POST("", cc.CreateCustomerReviews)
 			}
 		}
 	}
