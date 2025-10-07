@@ -46,6 +46,7 @@ func Routes(r *gin.Engine) {
 			{
 				customer.GET("", cc.GetCustomerReviews)
 				customer.POST("", cc.CreateCustomerReviews)
+				customer.DELETE("/:id", cc.DeleteCustomerReviews)
 			}
 		}
 	}

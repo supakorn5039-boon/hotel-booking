@@ -64,6 +64,14 @@ export default function Home() {
       },
    });
 
+   const deleteReview = useMutation({
+      mutationFn: (id: number) => CustomerReviewsService.deleteReview(id),
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: [CustomerReviewsService.QUERY_KEY] });
+         ToastAlert('success', 'Review deleted successfully');
+      },
+   });
+
    const handleEdit = (hotel: HotelProps) => {
       setEditingHotel(hotel);
       form.reset(hotel);
@@ -186,6 +194,15 @@ export default function Home() {
                         <Card key={t.name} className="p-6 shadow-sm">
                            <p className="italic text-gray-600">"{t.text}"</p>
                            <p className="mt-4 font-semibold text-gray-900">{t.name}</p>
+                           {role.toLowerCase() === 'admin' && (
+                              <Button
+                                 className="w-fit flex justify-end"
+                                 variant="destructive"
+                                 onClick={() => deleteReview.mutate(Number(t.id))}
+                              >
+                                 <Trash2 size={16} />
+                              </Button>
+                           )}
                         </Card>
                      ))}
                </div>

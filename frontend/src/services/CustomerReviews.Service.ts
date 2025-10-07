@@ -17,6 +17,11 @@ export const CustomerReviewsService = {
       return res.data;
    },
 
+   deleteReview: async (id: number): Promise<void> => {
+      const res = await fetchClient.delete(`${ApiRoutes.CUSTOMER_REVIEWS}/${id}`);
+      return res.data;
+   },
+
    useReviewForm: (initialForm: CustomerReviewsProps = ReviewsDefaultValues) => {
       return useForm<CustomerReviewsProps>({
          resolver: zodResolver(reviewSchema),

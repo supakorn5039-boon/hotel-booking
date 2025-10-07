@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"supakorn-5039/src/models"
 	"supakorn-5039/src/server/services"
 	"supakorn-5039/src/utils"
@@ -52,4 +53,25 @@ func (cc *CustomerController) CreateCustomerReviews(c *gin.Context) {
 	}
 
 	utils.SuccessResponse(c, dto)
+}
+
+func (cc *CustomerController) DeleteCustomerReviews(c *gin.Context) {
+
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		utils.ErrorResponse(c, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	if err := cc.service.DeleteCustomerReviews(uint(id)); err != nil {
+		utils.ErrorResponse(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.SuccessResponse(c, gin.H{
+		"message": "Customer deleted successfully",
+	})
 }

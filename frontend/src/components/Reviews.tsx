@@ -2,14 +2,14 @@ import { CustomerReviewsService } from '@/services/CustomerReviews.Service';
 import type { CustomerReviewsProps } from '@/types/CustomerReviews';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Star } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import ReviewForm from './form/ReviewForm';
 import DialogModal from './modal/DIalogModal';
 import { ToastAlert } from './Toast';
 import { Button } from './ui/button';
 
-export default function Reviews(): React.ReactElement {
+export default function Reviews() {
    const [isOpen, setIsOpen] = useState<boolean>(false);
    const queryClient = useQueryClient();
 

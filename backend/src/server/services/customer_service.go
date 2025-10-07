@@ -42,3 +42,11 @@ func (s *CustomerService) CreateCustomerReviews(review *models.Customer) (*model
 	return &dto, nil
 
 }
+
+func (s *CustomerService) DeleteCustomerReviews(id uint) error {
+	if err := s.db.Delete(&models.Customer{}, id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
